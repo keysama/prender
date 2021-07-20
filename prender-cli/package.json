@@ -1,0 +1,37 @@
+{
+  "name": "prender-cli",
+  "version": "1.2.0",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "prender": "./bin/prender-cli.js"
+  },
+  "scripts": {
+    "build": "rollup -c ./build/rollup.config.prod.js",
+    "dev": "rollup -c ./build/rollup.config.dev.js",
+    "test": "prender build -h"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^4.1.1",
+    "cli-table2": "^0.2.0",
+    "commander": "^8.0.0",
+    "compressing": "^1.5.1",
+    "koa": "^2.13.1",
+    "koa-router": "^10.0.0",
+    "koa-static": "^5.0.0",
+    "puppeteer": "^10.1.0",
+    "rollup": "^2.53.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.14.6",
+    "rollup-plugin-babel": "^4.4.0"
+  },
+  "files": [
+    "lib",
+    "bin",
+    "constants.js"
+  ]
+}

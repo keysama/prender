@@ -1,0 +1,31 @@
+{
+  "name": "prender-core",
+  "version": "1.2.0",
+  "description": "",
+  "main": "dist/umd/main.js",
+  "module": "dist/es/main.js",
+  "scripts": {
+    "test": "rollup -v",
+    "dev": "rollup --config ./build/rollup.config.dev.js",
+    "build": "rollup --config ./build/rollup.config.prod.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.14.6",
+    "@babel/preset-env": "^7.14.7",
+    "rollup": "^2.53.2",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-serve": "^1.1.0",
+    "rollup-plugin-uglify": "^6.0.4"
+  },
+  "dependencies": {},
+  "files": [
+    "dist",
+    "src",
+    "useCollectLoader",
+    "loader",
+    "constants.js"
+  ]
+}
