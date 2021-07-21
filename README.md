@@ -1,6 +1,6 @@
 # prender
 
-### 使用prender只需要修改少量代码，通过给发送的请求添加注释标记，即可使用命令行将打包后的文件，根据不同的静态化策略，使用模拟浏览器访问并将请求结果分离为json文件或注入到html中，利用renderToString将请求结果注入react渲染出首屏页面
+### 使用prender只需要修改少量代码，通过给发送的请求添加注释标记，即可使用命令行将打包后的文件，根据不同的静态化策略，使用模拟浏览器访问并将请求结果分离为json文件或注入到html中，利用renderToString将请求结果注入react渲染出首屏页面
 
 例如你可以使用
 prender build /homepage --target=./build --output=./newBuild
@@ -73,7 +73,7 @@ prender会启动一个本地服务尝试访问/homepage页面，配置多个页�
 ```
 
 ### 使用loader
-#### prenderLoader将完成你对请求的标记的收集和处理，如何标记请求
+#### prenderLoader将完成你对请求的标记的收集和处理，如何标记请求
 ```
     const prenderLoader = require("prender-core/prenderLoader");
 
