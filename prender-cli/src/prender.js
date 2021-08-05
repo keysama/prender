@@ -19,7 +19,13 @@ class Prender {
         this.syncNum = syncNum;
         this.debug = debug;
 
-        this.puppeteerOptions = { headless: !show },
+        this.puppeteerOptions = { 
+            headless: !show ,
+            defaultViewport: {
+                width: 1600,
+                height: 900,
+              }
+        },
             this.pageOptions = { waituntil: 'networkidle0', timeout: timeout },
 
             this._server = new Server({

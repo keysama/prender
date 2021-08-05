@@ -35,27 +35,36 @@ class Rerender {
       }
   
       try{
+        console.log("===1===")
         this.page = await this.browser.newPage();
-  
+
+        console.log("===2===")
         await this.filterRequest();
   
+        console.log("===3===")
         await this.preInject(prenderTag, this.injectObj);
   
+        console.log("===4===")
         await this.page.goto(this.url, {...this.pageOptions, timeout : 0});
   
+        console.log("===5===")
         await wait(this.defaultWaitTime);
   
+        console.log("===6===")
         this.cacheData = await this.collectRequest();
 
         console.log("cached", this.cacheData)
   
         const { computedInjectData, computedFileData } = await this.digest(this.mode,this.cacheData);
   
+        console.log("===7===")
         await this.reactReRender(urlLib.parse(this.url).pathname, computedInjectData);
   
+        console.log("===8===")
         let dependentNum = await this.produce(computedFileData);
   
         if(!this.debug){
+          console.log("===9===")
           await this.page.close();
         }
   
@@ -69,7 +78,7 @@ class Rerender {
             console.log(e)
         }
         console.log("==================================")
-        await this.page.close();
+        // await this.page.close();
         return 'error';
       }
     }
@@ -107,7 +116,7 @@ class Rerender {
           function check(){
             if(!window[prenderLoadQueue] || window[prenderLoadQueue].size > 0){
                 console.log("===check===")
-              window.setTimeout(check,500)
+              window.setTimeout(check,2000)
             }else{
               const arr = [];
               const resources = document.querySelectorAll("[tag='PRERENDER_INJECTED']");
