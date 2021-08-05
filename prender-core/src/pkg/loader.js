@@ -16,6 +16,7 @@ function defaultTestFunc(text){
         return {
             markUrl,
             newText,
+            oldText: text,
             name,
             type
         }
@@ -39,21 +40,32 @@ function prenderLoader(source){
         return source;
     }
 
-    axiosStatment = axiosStatment[0];
+    // axiosStatment = axiosStatment[0];
 
     if(options.test){
         testFunc = options.test;
     }
 
-    let hitStatment = testFunc(axiosStatment);
+    let hitStatments = axiosStatment.map(item => testFunc(item)).filter(item => !!item );
 
-    if(!hitStatment){
+    // let hitStatment = testFunc(axiosStatment);
+
+    // if(!hitStatment){
+    //     return source;
+    // }
+    if(hitStatments.length <= 0){
         return source;
     }
 
-    const { markUrl,newText,name,type } = hitStatment;
+    hitStatments.forEach(item => {
+        const { markUrl,oldText,newText,name,type } = item;
+        source = source.replace(oldText,warp(newText,markUrl,name,type)) 
+    })
 
-    return source.replace(axiosStatment,warp(newText,markUrl,name,type)) 
+    // const { markUrl,newText,name,type } = hitStatment;
+
+    // return source.replace(axiosStatment,warp(newText,markUrl,name,type)) 
+    return source;
 }
 
 module.exports = prenderLoader;

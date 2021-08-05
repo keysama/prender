@@ -22,6 +22,7 @@ function defaultTestFunc(text) {
     return {
       markUrl: markUrl,
       newText: newText,
+      oldText: text,
       name: name,
       type: type
     };
@@ -42,25 +43,37 @@ function prenderLoader(source) {
 
   if (!axiosStatment) {
     return source;
-  }
+  } // axiosStatment = axiosStatment[0];
 
-  axiosStatment = axiosStatment[0];
 
   if (options.test) {
     testFunc = options.test;
   }
 
-  var hitStatment = testFunc(axiosStatment);
+  var hitStatments = axiosStatment.map(function (item) {
+    return testFunc(item);
+  }).filter(function (item) {
+    return !!item;
+  }); // let hitStatment = testFunc(axiosStatment);
+  // if(!hitStatment){
+  //     return source;
+  // }
 
-  if (!hitStatment) {
+  if (hitStatments.length <= 0) {
     return source;
   }
 
-  var markUrl = hitStatment.markUrl,
-      newText = hitStatment.newText,
-      name = hitStatment.name,
-      type = hitStatment.type;
-  return source.replace(axiosStatment, warp(newText, markUrl, name, type));
+  hitStatments.forEach(function (item) {
+    var markUrl = item.markUrl,
+        oldText = item.oldText,
+        newText = item.newText,
+        name = item.name,
+        type = item.type;
+    source = source.replace(oldText, warp(newText, markUrl, name, type));
+  }); // const { markUrl,newText,name,type } = hitStatment;
+  // return source.replace(axiosStatment,warp(newText,markUrl,name,type)) 
+
+  return source;
 }
 
 module.exports = prenderLoader;
