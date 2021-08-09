@@ -4,63 +4,66 @@ import { isInPuppeteer, transUrlToId } from "../tools";
 
 export { isInPuppeteer };
 
+export function wrapperFunc( promise, url, name ,type ){
+  window[prenderLoadQueue] = window[prenderLoadQueue] || new Set();
+  window[prenderLoadQueue].add(url)
+  return new Promise(async (resolve,reject) => {
+
+    const isInBrowser = !isInPuppeteer();
+    const json_id = transUrlToId(url);
+    let res = null;
+
+    if(isInBrowser){
+
+      if(window[cacheStore] && window[cacheStore][json_id]){
+        return resolve(window[cacheStore][json_id]);
+      }
+
+      //no cache,try to find json file
+      const mode = window[cacheStoreMode] || "";
+      let hasJson = false;
+      
+      if(mode === "default" && type === "parameter"){
+        hasJson = true;
+      }
+      if(mode === "json" && ( type === "parameter" || type === "env")){
+        hasJson = true;
+      }
+
+      if(hasJson){
+        try {
+          res = await fetch(`/jsons/${json_id}.json`);
+          res = await res.json();
+          //has json
+          return resolve(res);
+        }catch(e){
+          console.warn("can not find json file :" + `/jsons/${json_id}.json`);
+        }
+      }
+    }
+
+    try{
+      res = await promise();
+    }catch(e){
+      return reject(e);
+    }
+
+    if(!isInBrowser){
+      //in puppeteer
+      cacheData(url,json_id,res,name,type);
+    }
+    
+    return resolve(res)
+  }).finally(() => {
+    console.log("====delete====set")
+    window[prenderLoadQueue].delete(url)
+  })
+  
+}
+
 export function prenderInit(){
   console.log("5:50")
-  window[prenderWrapperFunc] = async ( promise, url, name ,type) => {
-    window[prenderLoadQueue] = window[prenderLoadQueue] || new Set();
-    window[prenderLoadQueue].add(url)
-    return new Promise(async (resolve,reject) => {
-  
-      const isInBrowser = !isInPuppeteer();
-      const json_id = transUrlToId(url);
-      let res = null;
-  
-      if(isInBrowser){
-  
-        if(window[cacheStore] && window[cacheStore][json_id]){
-          return resolve(window[cacheStore][json_id]);
-        }
-  
-        //no cache,try to find json file
-        const mode = window[cacheStoreMode] || "";
-        let hasJson = false;
-        
-        if(mode === "default" && type === "parameter"){
-          hasJson = true;
-        }
-        if(mode === "json" && ( type === "parameter" || type === "env")){
-          hasJson = true;
-        }
-  
-        if(hasJson){
-          try {
-            res = await fetch(`/jsons/${json_id}.json`);
-            res = await res.json();
-            //has json
-            return resolve(res);
-          }catch(e){
-            console.warn("can not find json file :" + `/jsons/${json_id}.json`);
-          }
-        }
-      }
-  
-      try{
-        res = await promise();
-      }catch(e){
-        return reject(e);
-      }
-  
-      if(!isInBrowser){
-        //in puppeteer
-        cacheData(url,json_id,res,name,type);
-      }
-      
-      return resolve(res)
-    }).finally(() => {
-      console.log("====delete====set")
-      window[prenderLoadQueue].delete(url)
-    })
-  }
+  window[prenderWrapperFunc] = wrapperFunc;
 }
 
 function defaultWrapTemplate(data){
