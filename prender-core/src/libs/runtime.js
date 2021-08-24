@@ -1,8 +1,27 @@
+import { useState, useEffect } from 'react';
 import { prenderWrapperFunc,prenderLoadQueue,cacheStore,cacheStoreMode } from "../../../constants";
 
 import { isInPuppeteer, transUrlToId } from "../tools";
 
 export { isInPuppeteer };
+
+export function usePrender(axios, url, type, name){
+  useState(() => {
+    window[prenderLoadQueue] = window[prenderLoadQueue] || new Set();
+    window[prenderLoadQueue].add(url)
+  })
+
+  useEffect(() => {
+    const isInBrowser = !isInPuppeteer();
+    const json_id = transUrlToId(url);
+
+
+
+
+  })
+
+
+}
 
 export function wrapperFunc( promise, url, name ,type ){
   window[prenderLoadQueue] = window[prenderLoadQueue] || new Set();

@@ -9,15 +9,15 @@ const { compress, deleteFolder } = require('./tools');
 //folder为自定义要压缩的文件夹
 
 let table = new Table({
-  head: [ 'path', 'mode' ], 
-  colWidths: [ 20, 20 ]
+  head: ['path', 'mode'],
+  colWidths: [20, 20]
 })
 let table2 = new Table({
-  head: [ 'path', 'mode', 'depent', 'status' ], 
-  colWidths: [ 20, 20, 20, 20 ]
+  head: ['path', 'mode', 'depent', 'status'],
+  colWidths: [20, 20, 20, 20]
 })
 
-program.version('0.1.0');
+program.version('1.2.4');
 
 program
   .command('build [routes...]')
@@ -36,52 +36,52 @@ program
   .option('--timeout [timeout]', '单个路由渲染时限,0不限制', 0)
   .option('--pool [pool]', '允许同时渲染最大数量', 5)
   .option('--debug', 'debug模式，不自动关闭', false)
-  .action(async (routes,cmd) => {
+  .action(async (routes, cmd) => {
 
     const { file: jsonFile, mode, port, target, delta, output, show, incremental, exclude, debug, clear, zip, timeout, pool } = cmd;
 
     let computedRoutes = [];
 
-    if(typeof mode === "string"){
+    if (typeof mode === "string") {
       computedRoutes = routes.map(item => ({
-        path : item,
-        mode : mode
+        path: item,
+        mode: mode
       }))
-    }else{
-      if( mode.length !== routes.length && mode.length !== 1 ){
+    } else {
+      if (mode.length !== routes.length && mode.length !== 1) {
         console.log(chalk.red("illegal mode options"))
         return false;
       }
-      computedRoutes = routes.map((item,key) => ({
-        path : item,
-        mode : mode[key] || mode[0]
+      computedRoutes = routes.map((item, key) => ({
+        path: item,
+        mode: mode[key] || mode[0]
       }))
     };
 
-    if(computedRoutes.length <= 0 && !fs.existsSync(jsonFile)){
+    if (computedRoutes.length <= 0 && !fs.existsSync(jsonFile)) {
       console.log(chalk.red("no routes to render"))
     }
 
-    if(computedRoutes.length <= 0 && fs.existsSync(jsonFile)){
-      let fileContent = require(path.resolve( process.cwd(), jsonFile ));
-      if (Array.isArray(fileContent)){
-        computedRoutes = fileContent.map(item => ({ path : item, mode : mode[0] }))
-      }else{
+    if (computedRoutes.length <= 0 && fs.existsSync(jsonFile)) {
+      let fileContent = require(path.resolve(process.cwd(), jsonFile));
+      if (Array.isArray(fileContent)) {
+        computedRoutes = fileContent.map(item => ({ path: item, mode: mode[0] }))
+      } else {
         computedRoutes = fileContent;
       }
     };
 
-    if(clear){
+    if (clear) {
       deleteFolder(output);
       deleteFolder(delta);
-      deleteFolder(output+".zip");
+      deleteFolder(output + ".zip");
     }
 
-    table.push(...computedRoutes.map((item, key )=>[ item.path , item.mode ]));
+    table.push(...computedRoutes.map((item, key) => [item.path, item.mode]));
 
     process.stdout.write(table.toString() + "\n")
 
-    var twirlTimer = (function() { var P = ["\\", "|", "/", "-"]; var x = 0; return setInterval(function() { process.stdout.write("\r" + P[x++]); x &= 3; }, 100); })();
+    var twirlTimer = (function () { var P = ["\\", "|", "/", "-"]; var x = 0; return setInterval(function () { process.stdout.write("\r" + P[x++]); x &= 3; }, 100); })();
 
     const my = new Prender({
       routes: computedRoutes, port, target, delta, output, show, incremental, exclude, timeout, pool, debug
@@ -89,10 +89,14 @@ program
 
     const results = await my.start();
 
-    if(zip){
-      try{
-        await compress(output)
-      }catch(e){
+    if (zip) {
+      try {
+        if (incremental) {
+          await compress(delta)
+        } else {
+          await compress(output)
+        }
+      } catch (e) {
         throw new Error(chalk.red("compress error"))
       }
     }
@@ -101,16 +105,16 @@ program
 
     clearInterval(twirlTimer);
 
-    table2.push(...computedRoutes.map((item, key )=>[item.path, item.mode, !results ? "error" : results[key], !results || results[key] === "error" ? chalk.red("error") : chalk.green('success') ]))
+    table2.push(...computedRoutes.map((item, key) => [item.path, item.mode, !results ? "error" : results[key], !results || results[key] === "error" ? chalk.red("error") : chalk.green('success')]))
 
     console.log(table2.toString())
 
-    if(!debug){
+    if (!debug) {
       process.exit(0);
-    }else{
+    } else {
       console.log("finish all")
     }
-    
+
   })
 
 program.parse(process.argv);

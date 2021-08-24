@@ -66,36 +66,38 @@ function copyFile(target, destination, ignore) {
     }
 }
 
-function deleteFolder(folder){
+function deleteFolder(folder) {
     let files = [];
-    if(fs.existsSync(folder)){
-      if(fs.statSync(folder).isFile()){
-        fs.unlinkSync(folder)
-        return;
-      }
-      files = fs.readdirSync(folder);
-      files.forEach(function(item){
-        const cur = folder + "/" + item;
-        if(fs.statSync(cur).isDirectory()){
-          deleteFolder(cur)
-        }else{
-          fs.unlinkSync(cur)
+    if (fs.existsSync(folder)) {
+        if (fs.statSync(folder).isFile()) {
+            fs.unlinkSync(folder)
+            return;
         }
-      })
-      fs.rmdirSync(folder)
+        files = fs.readdirSync(folder);
+        files.forEach(function (item) {
+            const cur = folder + "/" + item;
+            if (fs.statSync(cur).isDirectory()) {
+                deleteFolder(cur)
+            } else {
+                fs.unlinkSync(cur)
+            }
+        })
+        fs.rmdirSync(folder)
     }
-  }
+}
 
-function compress(folder){
-    return new Promise((resolve,reject) => {
-      compressing.zip.compressDir(folder, folder+'.zip')
-      .then(() => {
-        resolve('ok');
-      })
-      .catch(err => {
-          reject(err);
-          return
-      });
+function compress(folder) {
+    return new Promise((resolve, reject) => {
+        compressing.zip.compressDir(folder, folder + '.zip', {
+            ignoreBase: true
+        })
+            .then(() => {
+                resolve('ok');
+            })
+            .catch(err => {
+                reject(err);
+                return
+            });
     })
 }
 
