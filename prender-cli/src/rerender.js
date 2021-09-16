@@ -57,8 +57,8 @@ class Rerender {
   
         const { computedInjectData, computedFileData } = await this.digest(this.mode,this.cacheData);
   
-        console.log("===7===")
-        await this.reactReRender(urlLib.parse(this.url).pathname, computedInjectData);
+        console.log("===7===, skip")
+        // await this.reactReRender(urlLib.parse(this.url).pathname, computedInjectData);
   
         console.log("===8===")
         let dependentNum = await this.produce(computedFileData);

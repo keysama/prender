@@ -37,6 +37,7 @@ program
   .option('--pool [pool]', '允许同时渲染最大数量', 5)
   .option('--debug', 'debug模式，不自动关闭', false)
   .action(async (routes, cmd) => {
+    console.log('===test===');
 
     const { file: jsonFile, mode, port, target, delta, output, show, incremental, exclude, debug, clear, zip, timeout, pool } = cmd;
 

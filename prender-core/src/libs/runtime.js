@@ -74,14 +74,12 @@ export function wrapperFunc( promise, url, name ,type ){
     
     return resolve(res)
   }).finally(() => {
-    console.log("====delete====set")
     window[prenderLoadQueue].delete(url)
   })
   
 }
 
 export function prenderInit(){
-  console.log("5:50")
   window[prenderWrapperFunc] = wrapperFunc;
 }
 

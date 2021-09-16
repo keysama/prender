@@ -7,7 +7,7 @@ prenderInit();
 export function prenderInitSsr(fn){
     window[handleRenderToString] = function (localtion, preRenderStore) {
         window[cacheStore] = preRenderStore;
-        return fn(localtion)
+        return fn && fn(localtion);
     };
 }
 
