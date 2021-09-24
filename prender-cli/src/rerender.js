@@ -204,6 +204,7 @@ class Rerender {
   
     async produce(jsons) {
       await this.reRenderCss();
+      await this.reRenderScripts();
   
       for(let i = 0;i < jsons.length;i ++){
         createFile(path.join(this.rootPath, "./jsons/"), jsons[i].id + ".json",jsons[i].data);
@@ -308,6 +309,21 @@ class Rerender {
       });
   
       return styleSheetData;
+    }
+
+    async reRenderScripts() {
+      return this.page.evaluate(() => {
+        return new Promise((resolve) => {
+          const targets = Array.prototype.filter.call(document.querySelectorAll('head script'), (item) => {
+            return item.src.includes('chunk');
+          });
+
+          targets.reverse().forEach(item => {
+            document.body.insertBefore(item, document.getElementById('root').nextSibling);
+          })
+          resolve();
+        });
+      });
     }
   
   }

@@ -24,7 +24,10 @@ class Prender {
             defaultViewport: {
                 width: 1600,
                 height: 900,
-              }
+            },
+            args: [
+            '--disable-web-security'
+            ]
         },
             this.pageOptions = { waituntil: 'networkidle0', timeout: timeout },
 
