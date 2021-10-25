@@ -1,6 +1,6 @@
 {
   "name": "prender-cli",
-  "version": "1.2.7",
+  "version": "1.2.24",
   "description": "",
   "main": "index.js",
   "bin": {
@@ -23,7 +23,7 @@
     "koa-router": "^10.0.0",
     "koa-static": "^5.0.0",
     "puppeteer": "^10.1.0",
-    "rollup": "^2.53.2"
+    "rollup": "^2.58.1"
   },
   "devDependencies": {
     "@babel/core": "^7.14.6",

@@ -57,7 +57,7 @@ class Rerender {
   
         const { computedInjectData, computedFileData } = await this.digest(this.mode,this.cacheData);
   
-        console.log("===7===, skip")
+        // console.log("===7===, skip")
         // await this.reactReRender(urlLib.parse(this.url).pathname, computedInjectData);
   
         console.log("===8===")
@@ -248,23 +248,27 @@ class Rerender {
               const item = document.styleSheets[i];
               item.ownerNode.localName === 'style' && styleSheets.push(item);
             }
+
+            console.log('origin styleSheet:', styleSheets);
   
             return styleSheets.map((styleNode) => {
               const attributes = {};
               let text = '';
-  
-              styleNode.ownerNode.attributes.forEach((item) => {
+
+              for(let r=0;r<styleNode.ownerNode.attributes.length;r++ ){
+                const item = styleNode.ownerNode.attributes[r];
                 attributes[item.nodeName] = item.nodeValue;
-              });
-  
-              styleNode.rules.forEach((item) => {
+              }
+              
+              for(let r=0;r<styleNode.rules.length;r++ ){
+                const item = styleNode.rules[r];
                 text += item ? item.cssText : '';
-              });
-  
+              }
+
               return {
                 type: styleNode.type,
                 attributes,
-                text: text.trim(),
+                text: text?.trim(),
               };
             });
           }

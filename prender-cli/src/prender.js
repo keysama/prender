@@ -1,6 +1,7 @@
 const FlexCall = require("./flexCall");
 const Server = require("./server");
 const RerenderFactory = require("./rerenderFactory");
+const path = require("path");
 
 const { 
     copyFile
@@ -64,14 +65,16 @@ class Prender {
         } else {
             console.log("finish rerender")
         }
-
         try {
             if (!this.incremental) {
-                copyFile(this.target, this.output, this.exclude)
-                copyFile(this.delta, this.output, this.exclude)
+                copyFile(this.target, this.output, this.exclude);
+                if(this.routes?.find?.((route) => route.path === '/')){
+                    copyFile(path.resolve(this.output,'./index.html'), path.resolve(this.output,'./base.html'),[]);
+                }
+                copyFile(this.delta, this.output, this.exclude);
             }
         } catch (e) {
-
+            console.log(e)
         }
 
         return results;
